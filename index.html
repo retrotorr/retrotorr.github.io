@@ -4,113 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RetroTorr - Console Repair & Modding</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --sfc-gray: #e4e4e4;
-            --sfc-dark-gray: #bebebe;
-            --sfc-purple: #7b5db0;
-            --sfc-light-purple: #9d7fce;
-            --sfc-yellow: #ffd500;
-            --sfc-red: #e52521;
-            --sfc-green: #00b06f;
-            --sfc-blue: #0089cf;
-            --dark-text: #e0e0e0;
-            --white: #ffffff;
-            --glass-white: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.25);
+            --red: #e52521;
+            --red-dark: #8b1210;
+            --red-light: #ff4440;
+            --chrome: #d0d0d0;
+            --chrome-dark: #888;
+            --bg: #1a1a1a;
+            --bg2: #111;
+            --text: #e8e8e8;
+            --yellow: #ffd500;
         }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #4a4a4a 0%, #3a3a3a 50%, #2e2e2e 100%);
-            color: var(--dark-text);
+            font-family: 'Barlow Condensed', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             overflow-x: hidden;
-            line-height: 1.6;
-            position: relative;
         }
 
-        body::before {
-            content: "";
+        /* ── SCANLINES OVERLAY ── */
+        body::after {
+            content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0px, transparent 1px, transparent 2px, rgba(0,0,0,0.03) 3px),
-                repeating-linear-gradient(90deg, rgba(0,0,0,0.03) 0px, transparent 1px, transparent 2px, rgba(0,0,0,0.03) 3px);
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.07) 2px,
+                rgba(0,0,0,0.07) 4px
+            );
             pointer-events: none;
-            z-index: 1;
+            z-index: 9999;
         }
 
-        /* Animated subtle gradient background */
-        .grid-bg {
+        /* ── 3D CANVAS BACKGROUND ── */
+        #bg-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 20% 50%, rgba(229, 37, 33, 0.12) 0%, transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(229, 37, 33, 0.08) 0%, transparent 50%);
+            inset: 0;
             z-index: 0;
-            animation: subtleMove 20s ease-in-out infinite;
+            opacity: 0.55;
         }
 
-        @keyframes subtleMove {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 0.8; }
-        }
-
-        /* Header */
+        /* ── HEADER ── */
         header {
-            padding: 1.5rem 5%;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 4px solid var(--sfc-red);
-            box-shadow: 0 8px 32px rgba(229, 37, 33, 0.15);
             position: sticky;
             top: 0;
             z-index: 1000;
+            background: linear-gradient(180deg, #1a1a1a 0%, rgba(26,26,26,0.95) 100%);
+            border-bottom: 3px solid var(--red);
+            padding: 0 5%;
+            transform-style: preserve-3d;
+            box-shadow:
+                0 4px 0 var(--red-dark),
+                0 8px 30px rgba(229,37,33,0.4);
         }
 
         nav {
+            max-width: 1400px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1400px;
-            margin: 0 auto;
+            height: 72px;
         }
 
         .logo {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--sfc-red);
-            letter-spacing: -0.5px;
-            text-transform: uppercase;
-            position: relative;
-            padding-left: 1rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.4rem;
+            color: var(--red);
+            letter-spacing: 4px;
+            text-shadow:
+                2px 2px 0 var(--red-dark),
+                4px 4px 0 #4a0a0a,
+                6px 6px 12px rgba(229,37,33,0.5);
+            transform: perspective(300px) rotateX(5deg);
+            display: inline-block;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
-
-        .logo::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 70%;
-            background: var(--sfc-red);
-            border-radius: 2px;
+        .logo:hover {
+            transform: perspective(300px) rotateX(5deg) scale(1.05);
         }
 
         .nav-links {
@@ -121,687 +102,884 @@
         }
 
         .nav-links a {
-            color: var(--dark-text);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            color: var(--chrome);
             text-decoration: none;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
+            text-shadow: 1px 1px 0 #333, 2px 2px 4px rgba(0,0,0,0.5);
             position: relative;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
-
         .nav-links a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: -4px;
             left: 0;
             width: 0;
-            height: 3px;
-            background: var(--sfc-red);
+            height: 2px;
+            background: var(--red);
+            box-shadow: 0 0 8px var(--red);
             transition: width 0.3s ease;
         }
+        .nav-links a:hover { color: var(--red); text-shadow: 0 0 12px rgba(229,37,33,0.8); }
+        .nav-links a:hover::after { width: 100%; }
 
-        .nav-links a:hover {
-            color: var(--sfc-red);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        /* Cart Icon */
-        .cart-icon {
+        /* ── HERO ── */
+        .hero {
             position: relative;
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: var(--dark-text);
-            transition: all 0.3s ease;
-        }
-
-        .cart-icon:hover {
-            color: var(--sfc-red);
-            transform: scale(1.1);
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--sfc-red);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
+            z-index: 2;
+            min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 700;
-        }
-
-        .cart-count.hidden {
-            display: none;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 8rem 5% 6rem;
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            padding: 4rem 5%;
+            perspective: 1000px;
         }
 
-        .hero::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 800px;
-            height: 800px;
-            background: radial-gradient(circle, rgba(229, 37, 33, 0.2) 0%, transparent 70%);
-            animation: gentlePulse 6s ease-in-out infinite;
+        .hero-3d-stage {
+            transform-style: preserve-3d;
+            animation: heroFloat 6s ease-in-out infinite;
+        }
+        @keyframes heroFloat {
+            0%, 100% { transform: rotateX(2deg) rotateY(-1deg) translateZ(0); }
+            33%       { transform: rotateX(-1deg) rotateY(2deg) translateZ(20px); }
+            66%       { transform: rotateX(3deg) rotateY(-2deg) translateZ(10px); }
         }
 
-        @keyframes gentlePulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
-            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.5; }
+        .hero-eyebrow {
+            font-family: 'Courier Prime', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 6px;
+            color: var(--yellow);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(255,213,0,0.6);
+            animation: flicker 4s ease-in-out infinite;
+        }
+        @keyframes flicker {
+            0%,95%,100% { opacity: 1; }
+            96%          { opacity: 0.4; }
+            97%          { opacity: 1; }
+            98%          { opacity: 0.6; }
         }
 
         h1 {
-            font-family: 'Inter', sans-serif;
-            font-size: 4.5rem;
-            font-weight: 900;
-            margin-bottom: 1.5rem;
-            color: var(--dark-text);
-            letter-spacing: -2px;
-            position: relative;
-            z-index: 1;
-            line-height: 1.1;
-        }
-
-        h1 .red-text {
-            color: var(--sfc-red);
-            position: relative;
-            display: inline-block;
-        }
-
-        h1 .red-text::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background: var(--sfc-red);
-            opacity: 0.5;
-        }
-
-        .tagline {
-            font-size: 1.3rem;
-            color: var(--dark-text);
-            margin-bottom: 3rem;
-            position: relative;
-            z-index: 1;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            opacity: 0.8;
-        }
-
-        .cta-button {
-            display: inline-block;
-            padding: 1.2rem 3rem;
-            background: var(--sfc-red);
-            color: white;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 8px 24px rgba(229, 37, 33, 0.4);
-        }
-
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: #c01a16;
-            transition: left 0.4s ease;
-            z-index: -1;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 32px rgba(229, 37, 33, 0.5);
-        }
-
-        .cta-button:hover::before {
-            left: 0;
-        }
-
-        /* Services Section */
-        .services {
-            padding: 5rem 5%;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-
-        .section-title {
-            font-family: 'Inter', sans-serif;
-            font-size: 3rem;
-            text-align: center;
-            margin-bottom: 4rem;
-            color: var(--dark-text);
-            font-weight: 900;
-            letter-spacing: -1px;
-            position: relative;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: var(--sfc-red);
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-        }
-
-        .service-card {
-            background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-left: 4px solid var(--sfc-red);
-            padding: 2.5rem;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            box-shadow: 0 8px 32px rgba(229, 37, 33, 0.1);
-        }
-
-        .service-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: var(--sfc-red);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-        }
-
-        .service-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 16px 48px rgba(229, 37, 33, 0.25);
-            border-left-color: var(--sfc-red);
-        }
-
-        .service-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .service-icon {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(5rem, 14vw, 13rem);
+            line-height: 0.9;
+            color: var(--text);
+            letter-spacing: 4px;
+            /* Extruded 3D text effect */
+            text-shadow:
+                1px 1px 0 #aaa,
+                2px 2px 0 #999,
+                3px 3px 0 #888,
+                4px 4px 0 #777,
+                5px 5px 0 #666,
+                6px 6px 0 #555,
+                7px 7px 0 #444,
+                8px 8px 0 #333,
+                9px 9px 15px rgba(0,0,0,0.8),
+                12px 12px 30px rgba(0,0,0,0.6);
+            transform: perspective(600px) rotateX(8deg);
             display: block;
         }
 
-        .service-card h3 {
-            font-family: 'Inter', sans-serif;
+        h1 .red-text {
+            color: var(--red);
+            text-shadow:
+                1px 1px 0 #8b1210,
+                2px 2px 0 #7a100e,
+                3px 3px 0 #690e0c,
+                4px 4px 0 #580c0a,
+                5px 5px 0 #470a08,
+                6px 6px 0 #360806,
+                7px 7px 0 #250604,
+                8px 8px 0 #140402,
+                9px 9px 15px rgba(229,37,33,0.8),
+                15px 15px 40px rgba(229,37,33,0.4);
+            display: inline-block;
+        }
+
+        .hero-sub {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            color: var(--chrome);
+            margin-top: 2rem;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+
+        /* ── 3D CTA BUTTON ── */
+        .cta-button {
+            display: inline-block;
+            margin-top: 3rem;
+            padding: 1.1rem 3.5rem;
+            font-family: 'Bebas Neue', sans-serif;
             font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--sfc-red);
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            letter-spacing: 4px;
+            color: #fff;
+            background: var(--red);
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            /* 3D extrusion */
+            box-shadow:
+                0 4px 0 var(--red-dark),
+                0 6px 0 #5a0c0a,
+                0 8px 0 #3a0806,
+                0 10px 20px rgba(229,37,33,0.5),
+                0 0 40px rgba(229,37,33,0.2);
+        }
+        .cta-button:hover {
+            transform: translateY(-4px) translateZ(10px);
+            box-shadow:
+                0 8px 0 var(--red-dark),
+                0 10px 0 #5a0c0a,
+                0 12px 0 #3a0806,
+                0 16px 30px rgba(229,37,33,0.6),
+                0 0 60px rgba(229,37,33,0.3);
+        }
+        .cta-button:active {
+            transform: translateY(2px);
+            box-shadow:
+                0 2px 0 var(--red-dark),
+                0 4px 10px rgba(229,37,33,0.4);
         }
 
-        .service-card p {
-            font-size: 1rem;
-            color: var(--dark-text);
-            line-height: 1.7;
-            font-weight: 400;
-            opacity: 0.85;
-        }
-
-        /* Products Section */
-        .products {
-            padding: 5rem 5%;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            border-top: 4px solid var(--sfc-red);
-            border-bottom: 4px solid var(--sfc-red);
+        /* ── SECTIONS COMMON ── */
+        .section-wrap {
             position: relative;
             z-index: 2;
+            padding: 6rem 5%;
         }
 
-        .products-grid {
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            letter-spacing: 6px;
+            text-align: center;
+            margin-bottom: 4rem;
+            color: var(--text);
+            text-shadow:
+                2px 2px 0 #444,
+                4px 4px 0 #222,
+                6px 6px 0 #111,
+                8px 8px 20px rgba(0,0,0,0.8);
+            transform: perspective(400px) rotateX(5deg);
+            display: block;
+        }
+        .section-title span {
+            color: var(--red);
+            text-shadow:
+                2px 2px 0 var(--red-dark),
+                4px 4px 0 #4a0806,
+                6px 6px 12px rgba(229,37,33,0.5);
+        }
+
+        /* ── SERVICE CARDS ── */
+        .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             max-width: 1400px;
             margin: 0 auto;
+            perspective: 1000px;
+        }
+
+        .service-card {
+            background: linear-gradient(145deg, #222 0%, #1a1a1a 50%, #151515 100%);
+            border: 1px solid #333;
+            border-top: 1px solid #555;
+            border-left: 1px solid #555;
+            padding: 2.5rem;
+            position: relative;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease;
+            /* Extruded card base */
+            box-shadow:
+                4px 4px 0 #111,
+                8px 8px 0 #0a0a0a,
+                12px 12px 20px rgba(0,0,0,0.7),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(229,37,33,0) 0%, rgba(229,37,33,0.04) 100%);
+            transition: opacity 0.4s;
+            opacity: 0;
+        }
+        .service-card:hover {
+            transform: perspective(600px) rotateX(-8deg) rotateY(4deg) translateZ(20px);
+            box-shadow:
+                6px 6px 0 #111,
+                12px 12px 0 #0a0a0a,
+                20px 20px 40px rgba(0,0,0,0.8),
+                0 0 30px rgba(229,37,33,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .service-card:hover::before { opacity: 1; }
+
+        /* Red side stripe — physical extrusion illusion */
+        .service-card::after {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 5px;
+            background: linear-gradient(180deg, var(--red-light), var(--red), var(--red-dark));
+            box-shadow: 2px 0 10px rgba(229,37,33,0.5);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            filter: drop-shadow(3px 3px 4px rgba(0,0,0,0.8));
+        }
+        .service-card h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            color: var(--red);
+            margin-bottom: 0.8rem;
+            text-shadow: 1px 1px 0 var(--red-dark), 3px 3px 8px rgba(229,37,33,0.3);
+        }
+        .service-card p {
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: #aaa;
+        }
+
+        /* ── PRODUCTS ── */
+        .products-section {
+            position: relative;
+            z-index: 2;
+            padding: 6rem 5%;
+            background: linear-gradient(180deg, transparent, rgba(229,37,33,0.04) 50%, transparent);
+        }
+        .products-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--red), transparent);
+        }
+        .products-section::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--red), transparent);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            perspective: 1200px;
         }
 
         .product-card {
-            background: rgba(255, 255, 255, 0.45);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.5);
+            background: linear-gradient(160deg, #252525 0%, #1c1c1c 40%, #161616 100%);
+            border: 1px solid #2a2a2a;
+            border-top: 1px solid #3a3a3a;
+            border-left: 1px solid #333;
             padding: 2rem;
             text-align: center;
             position: relative;
-            transition: all 0.4s ease;
-            box-shadow: 0 8px 32px rgba(229, 37, 33, 0.12);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease;
+            box-shadow:
+                3px 3px 0 #0f0f0f,
+                6px 6px 0 #0a0a0a,
+                10px 10px 25px rgba(0,0,0,0.8),
+                inset 0 1px 0 rgba(255,255,255,0.06);
         }
 
-        .product-card::after {
+        /* Top gloss strip */
+        .product-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 4px;
-            background: var(--sfc-red);
+            background: linear-gradient(90deg, var(--red-dark), var(--red), var(--red-light), var(--red), var(--red-dark));
+            box-shadow: 0 2px 12px rgba(229,37,33,0.5);
             transform: scaleX(0);
             transform-origin: left;
             transition: transform 0.4s ease;
         }
 
         .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 16px 48px rgba(229, 37, 33, 0.25);
+            transform: perspective(500px) rotateX(-10deg) rotateY(6deg) translateZ(25px) translateY(-5px);
+            box-shadow:
+                6px 6px 0 #0f0f0f,
+                12px 12px 0 #0a0a0a,
+                25px 25px 50px rgba(0,0,0,0.9),
+                0 0 40px rgba(229,37,33,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.1);
         }
-
-        .product-card:hover::after {
-            transform: scaleX(1);
-        }
+        .product-card:hover::before { transform: scaleX(1); }
 
         .product-name {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.4rem;
-            color: var(--dark-text);
-            margin-bottom: 1rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            color: var(--text);
+            margin-bottom: 0.8rem;
+            text-shadow: 1px 1px 0 #333, 3px 3px 8px rgba(0,0,0,0.7);
         }
-
         .product-description {
-            font-size: 1rem;
-            color: var(--dark-text);
+            font-size: 0.95rem;
+            color: #888;
             margin-bottom: 1.5rem;
             line-height: 1.6;
-            opacity: 0.8;
         }
-
         .price {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.8rem;
-            color: var(--sfc-red);
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.4rem;
+            letter-spacing: 2px;
+            color: var(--red);
+            text-shadow:
+                1px 1px 0 var(--red-dark),
+                2px 2px 0 #4a0806,
+                4px 4px 10px rgba(229,37,33,0.4);
             margin-bottom: 1.5rem;
-            font-weight: 900;
         }
 
+        /* ── 3D BUY BUTTON ── */
         .buy-button {
-            padding: 0.9rem 2.5rem;
-            background: var(--sfc-red);
-            color: white;
+            padding: 0.7rem 2rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            color: #fff;
+            background: var(--red);
             border: none;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 700;
             cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(229, 37, 33, 0.3);
+            position: relative;
+            transition: all 0.15s ease;
+            box-shadow:
+                0 3px 0 var(--red-dark),
+                0 5px 0 #4a0806,
+                0 7px 12px rgba(229,37,33,0.4);
         }
-
         .buy-button:hover {
-            background: #c01a16;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(229, 37, 33, 0.4);
+            transform: translateY(-3px);
+            box-shadow:
+                0 6px 0 var(--red-dark),
+                0 8px 0 #4a0806,
+                0 12px 20px rgba(229,37,33,0.5);
+        }
+        .buy-button:active {
+            transform: translateY(2px);
+            box-shadow:
+                0 1px 0 var(--red-dark),
+                0 3px 6px rgba(229,37,33,0.3);
         }
 
-        /* About Section */
-        .about {
-            padding: 5rem 5%;
-            max-width: 1200px;
+        /* ── ABOUT ── */
+        .about-section {
+            position: relative;
+            z-index: 2;
+            padding: 6rem 5%;
+        }
+        .about-box {
+            max-width: 900px;
             margin: 0 auto;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-
-        .about-content {
-            font-size: 1.15rem;
-            line-height: 1.9;
-            color: var(--dark-text);
-            background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background: linear-gradient(145deg, #222, #1a1a1a);
+            border: 1px solid #333;
+            border-top: 1px solid #444;
+            border-left: 1px solid #3a3a3a;
             padding: 3rem;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-left: 4px solid var(--sfc-red);
-            box-shadow: 0 8px 32px rgba(229, 37, 33, 0.15);
+            position: relative;
+            box-shadow:
+                6px 6px 0 #111,
+                12px 12px 0 #0a0a0a,
+                20px 20px 40px rgba(0,0,0,0.8),
+                inset 0 1px 0 rgba(255,255,255,0.05);
+            transform: perspective(800px) rotateX(2deg);
         }
+        .about-box::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 5px;
+            background: linear-gradient(180deg, var(--red-light), var(--red), var(--red-dark));
+            box-shadow: 2px 0 15px rgba(229,37,33,0.4);
+        }
+        .about-box p {
+            font-size: 1.1rem;
+            font-weight: 400;
+            line-height: 1.9;
+            color: #aaa;
+            margin-bottom: 1rem;
+        }
+        .about-box p:last-child { margin-bottom: 0; }
 
-        /* Contact Section */
-        .contact {
-            padding: 5rem 5%;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            border-top: 4px solid var(--sfc-red);
+        /* ── CONTACT ── */
+        .contact-section {
             position: relative;
             z-index: 2;
+            padding: 6rem 5%;
+            background: linear-gradient(180deg, transparent, rgba(229,37,33,0.03));
+        }
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--red), transparent);
         }
 
-        .contact-container {
+        .contact-inner {
             max-width: 800px;
             margin: 0 auto;
         }
-
-        .google-form-container {
-            background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            border-left: 4px solid var(--sfc-red);
+        .form-box {
+            background: linear-gradient(145deg, #1e1e1e, #181818);
+            border: 1px solid #2a2a2a;
+            border-top: 1px solid #3a3a3a;
+            border-left: 1px solid #333;
             padding: 1rem;
-            margin-bottom: 3rem;
-            box-shadow: 0 8px 32px rgba(229, 37, 33, 0.15);
-        }
-
-        .google-form-container iframe {
-            border-radius: 4px;
-        }
-
-        /* Footer */
-        footer {
-            padding: 2.5rem 5%;
-            text-align: center;
-            border-top: 4px solid var(--sfc-red);
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(20px);
-            position: relative;
-            z-index: 2;
-        }
-
-        footer p {
-            color: var(--dark-text);
-            font-weight: 500;
+            box-shadow:
+                5px 5px 0 #0f0f0f,
+                10px 10px 0 #0a0a0a,
+                16px 16px 30px rgba(0,0,0,0.8);
+            transform: perspective(800px) rotateX(1deg);
         }
 
         .social-links {
             display: flex;
             justify-content: center;
             gap: 2rem;
-            margin-top: 1.5rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
         }
-
         .social-links a {
-            color: var(--dark-text);
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.3rem;
+            letter-spacing: 3px;
+            color: var(--chrome);
             text-decoration: none;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            padding: 0.6rem 1.5rem;
+            border: 1px solid #333;
+            position: relative;
+            transition: all 0.2s ease;
+            background: linear-gradient(145deg, #222, #1a1a1a);
+            box-shadow: 2px 2px 0 #0a0a0a, 4px 4px 8px rgba(0,0,0,0.5);
         }
-
         .social-links a:hover {
-            color: var(--sfc-red);
-            transform: translateY(-2px);
+            color: var(--red);
+            border-color: var(--red);
+            box-shadow: 4px 4px 0 var(--red-dark), 8px 8px 16px rgba(229,37,33,0.3);
+            transform: translate(-2px,-2px);
         }
 
-        /* Responsive */
+        /* ── FOOTER ── */
+        footer {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 2.5rem 5%;
+            border-top: 3px solid var(--red);
+            background: #111;
+            box-shadow: 0 -4px 0 var(--red-dark), 0 -8px 30px rgba(229,37,33,0.2);
+        }
+        footer p {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 3px;
+            color: #666;
+        }
+        footer .tagline-foot {
+            color: var(--red);
+            font-size: 1.1rem;
+            margin-top: 0.4rem;
+            text-shadow: 0 0 12px rgba(229,37,33,0.4);
+        }
+
+        /* ── CART ── */
+        .cart-icon {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            position: relative;
+            cursor: pointer;
+            color: var(--chrome);
+            text-decoration: none;
+        }
+        .cart-count {
+            position: absolute;
+            top: -10px; right: -14px;
+            background: var(--red);
+            color: #fff;
+            border-radius: 50%;
+            width: 18px; height: 18px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem;
+            font-family: 'Courier Prime', monospace;
+            font-weight: 700;
+            box-shadow: 0 2px 0 var(--red-dark), 0 4px 8px rgba(229,37,33,0.5);
+        }
+        .cart-count.hidden { display: none; }
+
+        /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .tagline {
-                font-size: 1.1rem;
-            }
-
-            .nav-links {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-end;
-            }
-
-            .logo {
-                font-size: 1.2rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .services-grid,
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero {
-                padding: 5rem 5% 4rem;
-            }
-
-            .google-form-container iframe {
-                height: 900px;
-            }
-        }
-
-        /* Decorative elements */
-        .pixel-corner {
-            display: none;
+            .nav-links { gap: 1rem; }
+            .logo { font-size: 1.8rem; }
+            h1 { font-size: clamp(3.5rem, 16vw, 5rem); }
+            .services-grid, .products-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="grid-bg"></div>
 
-    <header>
-        <nav>
-            <div class="logo">RETROTORR</div>
-            <ul class="nav-links">
-                <li><a href="#services">Services</a></li>
-                <li><a href="#products">Products</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li>
-                    <a href="cart.html" class="cart-icon">
-                        Cart
-                        <span class="cart-count hidden" id="cartCount">0</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </header>
+<!-- ── 3D THREEJS BACKGROUND ── -->
+<canvas id="bg-canvas"></canvas>
 
-    <section class="hero">
-        <h1>FIX YOUR <span class="red-text">NOSTALGIA</span></h1>
-        <p class="tagline">Professional Console Repair • Revive Your Retro Experience • Premium Services</p>
+<header>
+    <nav>
+        <div class="logo">RETROTORR</div>
+        <ul class="nav-links">
+            <li><a href="#services">Services</a></li>
+            <li><a href="#products">Products</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li>
+                <a href="cart.html" class="cart-icon">
+                    CART
+                    <span class="cart-count hidden" id="cartCount">0</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+    <div class="hero-3d-stage">
+        <div class="hero-eyebrow">★ EST. 2015 · PHOENIX, AZ ★</div>
+        <h1>FIX YOUR<br><span class="red-text">NOSTALGIA</span></h1>
+        <p class="hero-sub">Professional Console Repair &nbsp;·&nbsp; Modding &nbsp;·&nbsp; Restoration</p>
         <a href="#products" class="cta-button">Browse Collection</a>
-    </section>
+    </div>
+</section>
 
-    <section id="services" class="services">
-        <h2 class="section-title">Our Services</h2>
-        <div class="services-grid">
-            <div class="service-card">
-                <div class="service-icon">🎮</div>
-                <h3>Console Repair</h3>
-                <p>Expert repair for NES, SNES, Genesis, N64, PlayStation, and more. RGB output, region-free mods, and custom paint jobs.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">🔧</div>
-                <h3>Repairs & Restoration</h3>
-                <p>Bring your childhood console back to life. We restore, repair, and refurbish classic gaming systems to factory condition and beyond.</p>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">⚡</div>
-                <h3>Performance Upgrades</h3>
-                <p>HDMI conversions, flash cart installations, optical drive emulators, and region unlocking for the ultimate retro gaming experience.</p>
-            </div>
+<!-- ── SERVICES ── -->
+<section id="services" class="section-wrap">
+    <span class="section-title">Our <span>Services</span></span>
+    <div class="services-grid">
+        <div class="service-card">
+            <span class="service-icon">🎮</span>
+            <h3>Console Repair</h3>
+            <p>Expert repair for NES, SNES, Genesis, N64, PlayStation, and more. RGB output, region-free mods, and custom paint jobs.</p>
         </div>
-    </section>
-
-    <section id="products" class="products">
-        <h2 class="section-title">Featured Products</h2>
-        <div class="products-grid">
-            <div class="product-card" data-id="1" data-name="Modded SNES Classic" data-price="199.99">
-                <div class="product-name">Modded SNES Classic</div>
-                <p class="product-description">RGB-modded Super Nintendo with custom LED lighting and region-free capability</p>
-                <div class="price">$199.99</div>
-                <button class="buy-button">Add to Cart</button>
-            </div>
-            <div class="product-card" data-id="2" data-name="N64 HDMI Kit" data-price="149.99">
-                <div class="product-name">N64 HDMI Kit</div>
-                <p class="product-description">Professional HDMI mod installation for Nintendo 64 - crisp digital output</p>
-                <div class="price">$149.99</div>
-                <button class="buy-button">Add to Cart</button>
-            </div>
-            <div class="product-card" data-id="3" data-name="Genesis RGB Cable" data-price="39.99">
-                <div class="product-name">Genesis RGB Cable</div>
-                <p class="product-description">Premium SCART RGB cable for Sega Genesis - ultimate picture quality</p>
-                <div class="price">$39.99</div>
-                <button class="buy-button">Add to Cart</button>
-            </div>
-            <div class="product-card" data-id="4" data-name="SNES Controller Set" data-price="79.99">
-                <div class="product-name">SNES Controller Set</div>
-                <p class="product-description">Restored original controllers with new internals and custom colors</p>
-                <div class="price">$79.99</div>
-                <button class="buy-button">Add to Cart</button>
-            </div>
-            <div class="product-card" data-id="5" data-name="PlayStation PSIO" data-price="169.99">
-                <div class="product-name">PlayStation PSIO</div>
-                <p class="product-description">Optical drive emulator for PS1 - play games from SD card</p>
-                <div class="price">$169.99</div>
-                <button class="buy-button">Add to Cart</button>
-            </div>
-            <div class="product-card" data-id="6" data-name="Custom Console Shells" data-price="49.99">
-                <div class="product-name">Custom Console Shells</div>
-                <p class="product-description">Replacement shells in various colors for NES, SNES, Game Boy, and more</p>
-                <div class="price">$49.99</div>
-                <button class="buy-button">Add to Cart</button>
-            </div>
+        <div class="service-card">
+            <span class="service-icon">🔧</span>
+            <h3>Repairs & Restoration</h3>
+            <p>Bring your childhood console back to life. We restore, repair, and refurbish classic gaming systems to factory condition and beyond.</p>
         </div>
-    </section>
-
-    <section id="about" class="about">
-        <h2 class="section-title">About RetroTorr</h2>
-        <div class="about-content">
-            <p>We're passionate retro gaming enthusiasts dedicated to preserving and enhancing classic console experiences. With over a decade of modding expertise, we combine modern technology with vintage hardware to create the perfect blend of nostalgia and performance.</p>
-            <br>
-            <p>Every console is meticulously modified and tested to ensure the highest quality. We source authentic parts, use professional-grade tools, and stand behind our work with comprehensive warranties.</p>
+        <div class="service-card">
+            <span class="service-icon">⚡</span>
+            <h3>Performance Upgrades</h3>
+            <p>HDMI conversions, flash cart installations, optical drive emulators, and region unlocking for the ultimate retro gaming experience.</p>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section id="contact" class="contact">
-        <div class="contact-container">
-            <h2 class="section-title">Get In Touch</h2>
-            
-            <!-- Google Form Embed -->
-            <div class="google-form-container">
-                <iframe 
-                    src="https://docs.google.com/forms/d/e/1FAIpQLSe82jo2f5Sfg_-QtHcDlYbQcGvZrDg9miZJX7B724y89__FIw/viewform?embedded=true" 
-                    width="100%" 
-                    height="900" 
-                    frameborder="0" 
-                    marginheight="0" 
-                    marginwidth="0">
-                    Loading…
-                </iframe>
-            </div>
-            
-            <div class="social-links">
-                <a href="#">Discord</a>
-                <a href="#">Twitter</a>
-                <a href="#">Instagram</a>
-                <a href="#">YouTube</a>
-            </div>
+<!-- ── PRODUCTS ── -->
+<section id="products" class="products-section">
+    <span class="section-title">Featured <span>Products</span></span>
+    <div class="products-grid">
+        <div class="product-card" data-id="1" data-name="Modded SNES Classic" data-price="199.99">
+            <div class="product-name">Modded SNES Classic</div>
+            <p class="product-description">RGB-modded Super Nintendo with custom LED lighting and region-free capability</p>
+            <div class="price">$199.99</div>
+            <button class="buy-button">Add to Cart</button>
         </div>
-    </section>
+        <div class="product-card" data-id="2" data-name="N64 HDMI Kit" data-price="149.99">
+            <div class="product-name">N64 HDMI Kit</div>
+            <p class="product-description">Professional HDMI mod installation for Nintendo 64 — crisp digital output</p>
+            <div class="price">$149.99</div>
+            <button class="buy-button">Add to Cart</button>
+        </div>
+        <div class="product-card" data-id="3" data-name="Genesis RGB Cable" data-price="39.99">
+            <div class="product-name">Genesis RGB Cable</div>
+            <p class="product-description">Premium SCART RGB cable for Sega Genesis — ultimate picture quality</p>
+            <div class="price">$39.99</div>
+            <button class="buy-button">Add to Cart</button>
+        </div>
+        <div class="product-card" data-id="4" data-name="SNES Controller Set" data-price="79.99">
+            <div class="product-name">SNES Controller Set</div>
+            <p class="product-description">Restored original controllers with new internals and custom colors</p>
+            <div class="price">$79.99</div>
+            <button class="buy-button">Add to Cart</button>
+        </div>
+        <div class="product-card" data-id="5" data-name="PlayStation PSIO" data-price="169.99">
+            <div class="product-name">PlayStation PSIO</div>
+            <p class="product-description">Optical drive emulator for PS1 — play games from SD card</p>
+            <div class="price">$169.99</div>
+            <button class="buy-button">Add to Cart</button>
+        </div>
+        <div class="product-card" data-id="6" data-name="Custom Console Shells" data-price="49.99">
+            <div class="product-name">Custom Console Shells</div>
+            <p class="product-description">Replacement shells in various colors for NES, SNES, Game Boy, and more</p>
+            <div class="price">$49.99</div>
+            <button class="buy-button">Add to Cart</button>
+        </div>
+    </div>
+</section>
 
-    <footer>
-        <p style="font-size: 1rem; font-weight: 600;">&copy; 2026 RetroTorr. All Rights Reserved.</p>
-        <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--sfc-red); font-weight: 500;">Powering Up Nostalgia Since 2015</p>
-    </footer>
+<!-- ── ABOUT ── -->
+<section id="about" class="about-section">
+    <span class="section-title">About <span>RetroTorr</span></span>
+    <div class="about-box">
+        <p>We're passionate retro gaming enthusiasts dedicated to preserving and enhancing classic console experiences. With over a decade of modding expertise, we combine modern technology with vintage hardware to create the perfect blend of nostalgia and performance.</p>
+        <p>Every console is meticulously modified and tested to ensure the highest quality. We source authentic parts, use professional-grade tools, and stand behind our work with comprehensive warranties.</p>
+    </div>
+</section>
 
-    <script src="cart.js"></script>
-    <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
+<!-- ── CONTACT ── -->
+<section id="contact" class="contact-section">
+    <div class="contact-inner">
+        <span class="section-title">Get In <span>Touch</span></span>
+        <div class="form-box">
+            <iframe
+                src="https://docs.google.com/forms/d/e/1FAIpQLSe82jo2f5Sfg_-QtHcDlYbQcGvZrDg9miZJX7B724y89__FIw/viewform?embedded=true"
+                width="100%" height="900" frameborder="0" marginheight="0" marginwidth="0">
+                Loading…
+            </iframe>
+        </div>
+        <div class="social-links">
+            <a href="#">Discord</a>
+            <a href="#">Twitter</a>
+            <a href="#">Instagram</a>
+            <a href="#">YouTube</a>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 RETROTORR — ALL RIGHTS RESERVED</p>
+    <p class="tagline-foot">Powering Up Nostalgia Since 2015</p>
+</footer>
+
+<!-- ── THREEJS BACKGROUND ── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+    const canvas = document.getElementById('bg-canvas');
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 200);
+    camera.position.set(0, 0, 30);
+
+    // ─ FLOATING RETRO CUBES ─
+    const cubeGroup = new THREE.Group();
+    scene.add(cubeGroup);
+
+    const colors = [0xe52521, 0xc01a16, 0x8b1210, 0xff4440, 0x660e0c];
+    const meshes = [];
+
+    for (let i = 0; i < 60; i++) {
+        const size = Math.random() * 2 + 0.4;
+        const geo = Math.random() > 0.5
+            ? new THREE.BoxGeometry(size, size, size)
+            : new THREE.BoxGeometry(size * 2, size * 0.4, size * 0.4);
+
+        const mat = new THREE.MeshPhongMaterial({
+            color: colors[Math.floor(Math.random() * colors.length)],
+            emissive: 0xe52521,
+            emissiveIntensity: Math.random() * 0.15,
+            shininess: 80,
+            transparent: true,
+            opacity: Math.random() * 0.25 + 0.05,
+            wireframe: Math.random() > 0.6,
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(
+            (Math.random() - 0.5) * 80,
+            (Math.random() - 0.5) * 60,
+            (Math.random() - 0.5) * 50 - 10
+        );
+        mesh.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+        mesh.userData = {
+            vx: (Math.random() - 0.5) * 0.008,
+            vy: (Math.random() - 0.5) * 0.006,
+            rx: (Math.random() - 0.5) * 0.01,
+            ry: (Math.random() - 0.5) * 0.01,
+        };
+        cubeGroup.add(mesh);
+        meshes.push(mesh);
+    }
+
+    // ─ GRID PLANE ─
+    const gridGeo = new THREE.PlaneGeometry(160, 120, 20, 20);
+    const gridMat = new THREE.MeshBasicMaterial({
+        color: 0xe52521,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.06,
+    });
+    const grid = new THREE.Mesh(gridGeo, gridMat);
+    grid.rotation.x = -Math.PI / 2.5;
+    grid.position.set(0, -20, -15);
+    scene.add(grid);
+
+    // ─ LIGHTS ─
+    const ambientLight = new THREE.AmbientLight(0x1a1a1a, 1);
+    scene.add(ambientLight);
+
+    const redLight = new THREE.PointLight(0xe52521, 3, 80);
+    redLight.position.set(0, 10, 20);
+    scene.add(redLight);
+
+    const dimLight = new THREE.PointLight(0x330808, 2, 60);
+    dimLight.position.set(-30, -10, 10);
+    scene.add(dimLight);
+
+    // ─ MOUSE PARALLAX ─
+    let mouseX = 0, mouseY = 0;
+    document.addEventListener('mousemove', e => {
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    });
+
+    // ─ SCROLL DEPTH ─
+    let scrollY = 0;
+    window.addEventListener('scroll', () => { scrollY = window.scrollY; });
+
+    window.addEventListener('resize', () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+    });
+
+    let t = 0;
+    function animate() {
+        requestAnimationFrame(animate);
+        t += 0.005;
+
+        meshes.forEach(m => {
+            m.position.x += m.userData.vx;
+            m.position.y += m.userData.vy;
+            m.rotation.x += m.userData.rx;
+            m.rotation.y += m.userData.ry;
+
+            // wrap edges
+            if (m.position.x > 45) m.position.x = -45;
+            if (m.position.x < -45) m.position.x = 45;
+            if (m.position.y > 35) m.position.y = -35;
+            if (m.position.y < -35) m.position.y = 35;
         });
 
-        // Add to cart functionality
-        document.querySelectorAll('.buy-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const productCard = this.closest('.product-card');
-                const product = {
-                    id: productCard.dataset.id,
-                    name: productCard.dataset.name,
-                    price: parseFloat(productCard.dataset.price),
-                    quantity: 1
-                };
-                
-                addToCart(product);
-                
-                // Visual feedback
-                this.textContent = 'Added! ✓';
-                this.style.background = '#00b06f';
-                setTimeout(() => {
-                    this.textContent = 'Add to Cart';
-                    this.style.background = '';
-                }, 2000);
-            });
-        });
+        // Gentle camera drift following mouse
+        camera.position.x += (mouseX * 4 - camera.position.x) * 0.025;
+        camera.position.y += (-mouseY * 3 - camera.position.y) * 0.025;
 
-        // Parallax effect on scroll
-        window.addEventListener('scroll', function() {
-            const scrolled = window.pageYOffset;
-            const parallax = document.querySelector('.grid-bg');
-            if (parallax) {
-                parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+        // Scroll depth
+        camera.position.z = 30 + scrollY * 0.01;
+
+        // Pulsing red light
+        redLight.intensity = 2.5 + Math.sin(t * 1.5) * 0.8;
+        redLight.position.x = Math.sin(t * 0.5) * 15;
+        redLight.position.y = Math.cos(t * 0.3) * 10;
+
+        cubeGroup.rotation.y = t * 0.04;
+
+        renderer.render(scene, camera);
+    }
+    animate();
+})();
+</script>
+
+<!-- ── CART + SCROLL + INTERACTIONS ── -->
+<script src="cart.js" onerror="console.log('cart.js not found, using fallback')"></script>
+<script>
+    // Cart fallback if cart.js isn't loaded
+    if (typeof addToCart === 'undefined') {
+        window.addToCart = function(product) {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existing = cart.find(i => i.id === product.id);
+            if (existing) { existing.quantity++; }
+            else { cart.push(product); }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount();
+        };
+        window.updateCartCount = function() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((a, i) => a + i.quantity, 0);
+            const el = document.getElementById('cartCount');
+            if (el) {
+                el.textContent = count;
+                el.classList.toggle('hidden', count === 0);
             }
-        });
+        };
+    }
 
-        // Update cart count on page load
-        updateCartCount();
-    </script>
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', function(e) {
+            e.preventDefault();
+            const t = document.querySelector(this.getAttribute('href'));
+            if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    });
+
+    // Add to cart
+    document.querySelectorAll('.buy-button').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const card = this.closest('.product-card');
+            addToCart({
+                id: card.dataset.id,
+                name: card.dataset.name,
+                price: parseFloat(card.dataset.price),
+                quantity: 1
+            });
+            const orig = this.textContent;
+            this.textContent = 'Added! ✓';
+            this.style.background = '#00b06f';
+            this.style.boxShadow = '0 3px 0 #006640, 0 6px 12px rgba(0,176,111,0.4)';
+            setTimeout(() => {
+                this.textContent = orig;
+                this.style.background = '';
+                this.style.boxShadow = '';
+            }, 2000);
+        });
+    });
+
+    // Card tilt reset on mouse leave
+    document.querySelectorAll('.service-card, .product-card').forEach(card => {
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+        });
+        card.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dx = (e.clientX - cx) / (rect.width / 2);
+            const dy = (e.clientY - cy) / (rect.height / 2);
+            this.style.transform = `perspective(600px) rotateX(${-dy * 10}deg) rotateY(${dx * 10}deg) translateZ(20px)`;
+        });
+    });
+
+    updateCartCount();
+</script>
 </body>
 </html>
